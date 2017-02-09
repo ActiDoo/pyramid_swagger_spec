@@ -48,7 +48,9 @@ To specify API calls:
 import pyramid_swagger_spec.swagger as sw
 # The traversal hierarchy has to match the subpath (i.e. /api/echo must return an EchoRessource instance)
 from myproject.ressources import EchoRessource
-from myproject.routes import api_route 
+from myproject.routes import api_route
+ 
+ 
 @api_route(path="/echo/{x}", request_method="GET", name="test", context=EchoRessource, renderer='json', api=sw.api(
     operation_id="echo_test",
     summary="echos the input",
