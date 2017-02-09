@@ -58,7 +58,7 @@ from myproject.routes import api_route
     ],
     responses={
         200: sw.response(schema={
-            "status": property(sw.Types.string)
+            "status": sw.property(sw.Types.string)
         })
     }
 ))
