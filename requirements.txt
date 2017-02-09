@@ -1,0 +1,5 @@
+jsonschema>=2.6.0
+pyramid>=1.8.1
+venusian>=1.0
+zope.deprecation>=4.2.0
+zope.interface>=4.3.3
