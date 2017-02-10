@@ -21,6 +21,7 @@ def generate_swagger(title, version, basePath, paths, schemes=["https",]):
         "paths": {
             itemUrl: {
                 itemMethod: {
+                    "tags": [methodParams.get("tag", "default"),],
                     "operationId": methodParams.get("operationId", ""),
                     "parameters": methodParams.get("parameters", []),
                     "consumes": methodParams.get("consumes", ["application/json", ]),
@@ -113,7 +114,8 @@ class Formats:
     color = "color"  # required webcolors
 
 
-def api(operation_id,
+def api(tag,
+        operation_id,
         summary,
         parameters=[],
         consumes=["application/json"],
@@ -121,6 +123,7 @@ def api(operation_id,
         description="",
         responses={}):
     return {
+        'tag': tag,
         'operationId': operation_id,
         'summary': summary,
         'parameters': parameters,
@@ -158,6 +161,22 @@ def property(type, format="", nullable=True):
         "type": type,
         "format": format,
         "x-nullable": nullable
+    }
+
+
+def object_property(properties, nullable=True):
+    return {
+        "type": "object",
+        "x-nullable": nullable,
+        "properties": properties
+    }
+
+
+def array_property(items, nullable=True):
+    return {
+        "type": "array",
+        "x-nullable": nullable,
+        "items": items
     }
 
 
