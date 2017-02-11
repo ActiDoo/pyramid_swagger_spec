@@ -156,7 +156,7 @@ def query_parameter(name, parameter_type, format="", required=False, description
     }
 
 
-def property(type, format="", nullable=True):
+def property(type, format="", nullable=False):
     return {
         "type": type,
         "format": format,
@@ -164,7 +164,7 @@ def property(type, format="", nullable=True):
     }
 
 
-def object_property(properties, nullable=True):
+def object_property(properties, nullable=False):
     return {
         "type": "object",
         "x-nullable": nullable,
@@ -172,7 +172,7 @@ def object_property(properties, nullable=True):
     }
 
 
-def array_property(items, nullable=True):
+def array_property(items, nullable=False):
     return {
         "type": "array",
         "x-nullable": nullable,
