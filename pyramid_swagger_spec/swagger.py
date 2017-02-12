@@ -156,27 +156,30 @@ def query_parameter(name, parameter_type, format="", required=False, description
     }
 
 
-def property(type, format="", nullable=False):
+def property(type, format="", nullable=False, description=""):
     return {
         "type": type,
         "format": format,
-        "x-nullable": nullable
+        "x-nullable": nullable,
+        "description": description
     }
 
 
-def object_property(properties, nullable=False):
+def object_property(properties, nullable=False, description=""):
     return {
         "type": "object",
         "x-nullable": nullable,
-        "properties": properties
+        "properties": properties,
+        "description": description
     }
 
 
-def array_property(items, nullable=False):
+def array_property(items, nullable=False, description=""):
     return {
         "type": "array",
         "x-nullable": nullable,
-        "items": items
+        "items": items,
+        "description": description
     }
 
 
