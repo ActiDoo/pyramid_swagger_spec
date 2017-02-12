@@ -99,6 +99,7 @@ class Types:
     array = "array"
     number = "number"
     string = "string"
+    file = "file"
 
 
 class Formats:
@@ -112,6 +113,7 @@ class Formats:
     time = "time"
     regex = "regex"
     color = "color"  # required webcolors
+    byte = "byte"
 
 
 def api(tag,
@@ -209,6 +211,17 @@ def response(schema, description=""):
     }
 
     Draft4Validator.check_schema(schema)
+
+    return {
+        "description": description,
+        "schema": schema
+    }
+
+
+def file_response(description=""):
+    schema = {
+        "type": "file",
+    }
 
     return {
         "description": description,
