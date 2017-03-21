@@ -46,6 +46,9 @@ def validate_request(request, api):
                 validator.validate(request.json_body)
             except ValidationError as e:
                 raise APIError(400, message="Body: %s" % (e.message,))
+            else:
+                body_values = request.json_body
+
         elif x["in"] == "query":
             # query param
             try:
