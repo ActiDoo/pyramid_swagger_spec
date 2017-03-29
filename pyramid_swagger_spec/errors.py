@@ -11,7 +11,6 @@ class APIError(Exception):
         self.message = message
 
 
-@view_config(context=APIError)
 def json_exception_view(exc, request):
     s = json.dumps({
         "status": exc.status,

@@ -1,4 +1,5 @@
 from collections import namedtuple
+from json.decoder import JSONDecodeError
 
 from jsonschema import draft4_format_checker, validate
 from jsonschema.exceptions import ValidationError
@@ -46,6 +47,8 @@ def validate_request(request, api):
                 validator.validate(request.json_body)
             except ValidationError as e:
                 raise APIError(400, message="Body: %s" % (e.message,))
+            except JSONDecodeError as e:
+                raise APIError(400, message="Body: JSON could not be decoded.")
             else:
                 body_values = request.json_body
 

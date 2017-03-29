@@ -116,6 +116,10 @@ class Formats:
     byte = "byte"
 
 
+class Patterns:
+    uuid = "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
+
+
 def api(tag,
         operation_id,
         summary,
@@ -158,13 +162,18 @@ def query_parameter(name, parameter_type, format="", required=False, description
     }
 
 
-def property(type, format="", nullable=False, description=""):
-    return {
+def property(type, format="", nullable=False, description="", pattern=None):
+    ret = {
         "type": type,
         "format": format,
         "x-nullable": nullable,
-        "description": description
+        "description": description,
     }
+
+    if pattern:
+        ret["pattern"] = pattern
+
+    return ret
 
 
 def object_property(properties, nullable=False, description=""):
@@ -189,7 +198,8 @@ def body_parameter(schema, description=""):
     schema = {
         "$schema": "http://json-schema.org/schema#",
         "type": "object",
-        "properties": schema
+        "properties": schema,
+        "required": [k for k, v in schema.items() if not v.get("x-nullable")],
     }
 
     Draft4Validator.check_schema(schema)

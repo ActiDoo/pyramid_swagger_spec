@@ -1,8 +1,8 @@
 import time
 
+from .errors import APIError, json_exception_view
 from .namespace import RouteRegistry
 from .validator import validate_request
-
 
 def includeme(config):
     # Add a view-deriver to allow the "api" parameter to add_view
@@ -28,3 +28,6 @@ def includeme(config):
 
     # Register the RouteRegistry that will be used to store the api spec
     config.registry.registerUtility(RouteRegistry())
+
+    config.add_view(view=json_exception_view, context=APIError)
+
