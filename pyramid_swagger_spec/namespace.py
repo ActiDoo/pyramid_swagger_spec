@@ -151,6 +151,9 @@ def create_api_namespace(namespace):
                 request_method = kwargs.get("request_method", "GET")
                 registry = config.registry
                 registry.getUtility(IRouteRegistry).register(namespace, self.route_path, request_method, kwargs.get("api",{}))
+                if request_method.upper() != "OPTIONS":
+                    # We should add an OPTIONS route too, for preflight requests
+                    registry.getUtility(IRouteRegistry).register(namespace, self.route_path, "OPTIONS", kwargs.get("api", {}))
 
             info = venusian.attach(wrapped, callback)
 
