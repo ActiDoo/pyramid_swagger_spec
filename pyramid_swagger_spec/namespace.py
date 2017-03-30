@@ -4,6 +4,7 @@ import functools
 import inspect
 import venusian
 import zope.interface
+from pyramid.renderers import render_to_response
 from zope.interface.declarations import implementer
 
 # copied from tomb_routes, modified
@@ -45,6 +46,9 @@ class MatchdictMapper(object):
                 return view(request, **kwargs)
 
         return wrapper
+
+
+
 
 
 def add_simple_route(
@@ -121,9 +125,14 @@ def add_simple_route(
     config.add_view(target, *args, **kwargs)
     request_method = kwargs.get("request_method", "GET")
     if request_method != "OPTIONS":
-        config.add_view(target, *args, **dict(kwargs, request_method="OPTIONS"))
+        config.add_view(options_view, *args, **dict(kwargs, request_method="OPTIONS"))
     config.commit()
     config.route_prefix = orig_route_prefix
+
+
+def options_view(request, *args, **kw):
+    request.response.headers['Access-Control-Allow-Origin'] = '*'
+    return request.response
 
 
 def create_api_namespace(namespace):
