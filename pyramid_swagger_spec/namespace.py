@@ -119,6 +119,9 @@ def add_simple_route(
         kwargs['mapper'] = MatchdictMapper
 
     config.add_view(target, *args, **kwargs)
+    request_method = kwargs.get("request_method", "GET")
+    if request_method != "OPTIONS":
+        config.add_view(target, *args, **dict(kwargs, request_method="OPTIONS"))
     config.commit()
     config.route_prefix = orig_route_prefix
 
@@ -151,9 +154,6 @@ def create_api_namespace(namespace):
                 request_method = kwargs.get("request_method", "GET")
                 registry = config.registry
                 registry.getUtility(IRouteRegistry).register(namespace, self.route_path, request_method, kwargs.get("api",{}))
-                if request_method.upper() != "OPTIONS":
-                    # We should add an OPTIONS route too, for preflight requests
-                    registry.getUtility(IRouteRegistry).register(namespace, self.route_path, "OPTIONS", kwargs.get("api", {}))
 
             info = venusian.attach(wrapped, callback)
 
