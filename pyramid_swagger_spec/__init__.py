@@ -11,13 +11,16 @@ def includeme(config):
         api = info.options.get('api')
         if api:
             def wrapper_view(context, request):
-                start = time.time()
-                request.api = api
-                request.validated_params = validate_request(request, api)
-                response = view(context, request)
-                end = time.time()
-                response.headers['Access-Control-Allow-Origin'] = '*'
-                response.headers['X-View-Performance'] = '%.3f' % (end - start,)
+                if request.method != "OPTIONS":
+                    start = time.time()
+                    request.api = api
+                    request.validated_params = validate_request(request, api)
+                    response = view(context, request)
+                    end = time.time()
+                    response.headers['Access-Control-Allow-Origin'] = '*'
+                    response.headers['X-View-Performance'] = '%.3f' % (end - start,)
+                elif request.method == "OPTIONS":
+                    response = view(context, request)
                 return response
 
             return wrapper_view

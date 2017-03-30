@@ -132,7 +132,7 @@ def add_simple_route(
 
 def options_view(request, *args, **kw):
     request.response.headers['Access-Control-Allow-Origin'] = '*'
-    return {}
+    return None
 
 
 def create_api_namespace(namespace):
