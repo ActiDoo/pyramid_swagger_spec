@@ -124,7 +124,7 @@ def add_simple_route(
 
     config.add_view(target, *args, **kwargs)
     request_method = kwargs.get("request_method", "GET")
-    if request_method != "OPTIONS":
+    if request_method.upper() != "OPTIONS":
         config.add_view(options_view, *args, **dict(kwargs, request_method="OPTIONS"))
     config.commit()
     config.route_prefix = orig_route_prefix
