@@ -9,7 +9,7 @@ class Output:
     def __init__(self, d):
         self.d = d
 
-    def __json__(self):
+    def __json__(self, *args, **kw):
         return self.d
 
 
