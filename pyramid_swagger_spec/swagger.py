@@ -195,24 +195,23 @@ def array_property(items, nullable=False, description=""):
 
 
 def body_parameter(schema, description=""):
-    required = [k for k, v in schema.items() if not v.get("x-nullable")]
-    schema = {
+    gschema = {
         "$schema": "http://json-schema.org/schema#",
         "type": "object",
         "properties": schema,
     }
+    required = [k for k, v in schema.items() if not v.get("x-nullable")]
+    if len(required) > 0:
+        gschema["required"] = required
 
-    if len(required)>0:
-        schema["required"] = required
-
-    Draft4Validator.check_schema(schema)
+    Draft4Validator.check_schema(gschema)
 
     return {
         "name": "body",
         "in": "body",
         "required": True,
         "description": description,
-        "schema": schema
+        "schema": gschema
     }
 
 

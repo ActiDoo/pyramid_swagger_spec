@@ -3,6 +3,7 @@ import time
 from .errors import APIError, json_exception_view
 from .namespace import RouteRegistry
 from .validator import validate_request
+from .schema import JSchema
 
 def includeme(config):
     # Add a view-deriver to allow the "api" parameter to add_view
