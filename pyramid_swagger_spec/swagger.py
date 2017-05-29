@@ -4,9 +4,10 @@ from pyramid.settings import asbool
 from .namespace import IRouteRegistry
 
 
-def generate_swagger(title, version, basePath, paths, schemes=["https",]):
+def generate_swagger(title, version, host, basePath, paths, schemes=["https",]):
     return {
         "swagger": "2.0",
+        "host": host,
         "info": {
             "description": "",
             "version": version,
@@ -46,11 +47,14 @@ def create_swagger_view(config, namespace, title, version):
         route_registry = registry.getUtility(IRouteRegistry)
         registrations = route_registry.registrations[namespace]
         request.response.headers['Access-Control-Allow-Origin'] = '*'
-        allow_http = asbool(request.registry.settings.get("swagger.enable_http_scheme",0))
-        schemes = ["https"]
-        if allow_http:
+        use_http = asbool(request.registry.settings.get("swagger.use_http_scheme", 0))
+        host = request.registry.settings.get("swagger.host", "localhost:6543")
+        schemes = []
+        if use_http:
             schemes += ["http"]
-        return generate_swagger(title=title, version=version, basePath="/"+namespace, paths=registrations, schemes=schemes)
+        else:
+            schemes += ["https"]
+        return generate_swagger(title=title, version=version, host=host, basePath="/"+namespace, paths=registrations, schemes=schemes)
 
     config.add_view(view, route_name=route_name, request_method="GET", renderer="json")
 
