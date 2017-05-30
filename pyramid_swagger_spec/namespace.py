@@ -142,6 +142,8 @@ def create_api_namespace(namespace):
             """Constructor just here to accept parameters for decorator"""
             self.path = path
             view_name = kwargs.get("name", "")
+            if len(view_name.strip("/")) == 0:
+                raise Exception("You must provide a view_name to prevent route conflicts!")
             self.route_path = self.path.rstrip("/") + "/" + view_name.lstrip("/") if view_name else self.path
             self.prefixed_route_path = "/" + namespace + "/" + self.route_path.lstrip("/")
             self.args = args
