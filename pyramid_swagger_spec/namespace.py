@@ -125,7 +125,7 @@ def add_simple_route(
     config.add_view(target, *args, **kwargs)
     request_method = kwargs.get("request_method", "GET")
     if request_method.upper() != "OPTIONS":
-        config.add_view(options_view, *args, **dict(kwargs, request_method="OPTIONS"))
+        config.add_view(options_view, *args, **dict(kwargs, request_method="OPTIONS", permission=None))
     config.commit()
     config.route_prefix = orig_route_prefix
 
@@ -145,6 +145,7 @@ def create_api_namespace(namespace):
             if len(view_name.strip("/")) == 0:
                 raise Exception("You must provide a view_name to prevent route conflicts!")
             self.route_path = self.path.rstrip("/") + "/" + view_name.lstrip("/") if view_name else self.path
+            #self.prefixed_route_path = "/" + namespace + "/" + self.path.rstrip("/").lstrip("/")
             self.prefixed_route_path = "/" + namespace + "/" + self.route_path.lstrip("/")
             self.args = args
             self.kwargs = kwargs
