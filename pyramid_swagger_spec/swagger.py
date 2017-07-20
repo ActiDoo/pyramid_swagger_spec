@@ -143,6 +143,13 @@ def api(tag,
         'responses': responses,
     }
 
+def process_null_type(ret):
+    if ret["x-nullable"]:
+        if isinstance(ret["type"], list) and not Types.null in ret["type"]:
+            ret["type"].append(Types.null)
+        else:
+            ret["type"] = [ret["type"], Types.null]
+    return ret
 
 def path_parameter(name, parameter_type, format="", description=""):
     return {
@@ -177,25 +184,25 @@ def property(type, format="", nullable=False, description="", pattern=None):
     if pattern:
         ret["pattern"] = pattern
 
-    return ret
+    return process_null_type(ret)
 
 
 def object_property(properties, nullable=False, description=""):
-    return {
+    return process_null_type({
         "type": "object",
         "x-nullable": nullable,
         "properties": properties,
         "description": description
-    }
+    })
 
 
 def array_property(items, nullable=False, description=""):
-    return {
+    return process_null_type({
         "type": "array",
         "x-nullable": nullable,
         "items": items,
         "description": description
-    }
+    })
 
 
 def body_parameter(schema, description=""):
