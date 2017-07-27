@@ -1,7 +1,7 @@
 Pyramid Swagger Specifier
 ===============================
 
-version number: 0.0.5
+version number: 0.0.7
 author: Marcel Sander
 
 Overview
