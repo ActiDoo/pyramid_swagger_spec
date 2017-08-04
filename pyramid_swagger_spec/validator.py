@@ -55,6 +55,8 @@ def validate_request(request, api):
         elif x["in"] == "query":
             # query param
             try:
+                if not x["name"] in request.GET and not x["required"]:
+                    continue
                 query_values[x["name"]] = _validate(x, request.GET[x["name"]])
             except ValidationError as e:
                 raise APIError(400, message="Query: %s invalid. %s" % (x["name"], e.message))
