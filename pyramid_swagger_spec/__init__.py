@@ -1,5 +1,7 @@
 import time
 
+from pyramid.response import Response
+
 from .errors import APIError, json_exception_view
 from .namespace import RouteRegistry
 from .validator import validate_request
@@ -21,9 +23,11 @@ def includeme(config):
                     response.headers['Access-Control-Allow-Origin'] = '*'
                     response.headers['X-View-Performance'] = '%.3f' % (end - start,)
                 elif request.method.upper() == "OPTIONS":
-                    response = view(context, request)
+                    #response = view(context, request)
+                    response = Response(None, 200)
                     response.headers['Access-Control-Allow-Origin'] = '*'
-                    response.headers['Access-Control-Allow-Headers'] = request.headers['Access-Control-Request-Headers']
+                    if "Access-Control-Request-Headers" in request.headers:
+                        response.headers['Access-Control-Allow-Headers'] = request.headers['Access-Control-Request-Headers']
                     response.headers['Access-Control-Allow-Methods'] = "DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT"
                     response.headers['Access-Control-Allow-Credentials'] = "true"
                 return response

@@ -22,7 +22,7 @@ Or clone the repo:
     $ git clone https://github.com/ActiDoo/pyramid_swagger_spec.git
     $ python setup.py install
     
-Setup the view-deriver and RouteRegistry in your configuration by including
+Setup the view-deriver and RouteRegistry in your configuration (\_\_init\_\_.py) by including
 
 ```python
 config.include('pyramid_swagger_spec')
@@ -46,12 +46,14 @@ To specify API calls:
  
 ```python
 import pyramid_swagger_spec.swagger as sw
-# The traversal hierarchy has to match the subpath (i.e. /api/echo must return an EchoRessource instance)
+# If you use traversal, the traversal hierarchy has to match the subpath (i.e. /api/echo must return an EchoRessource instance)
+# If you don't use traversal, do not pass a context and a name attribute
 from myproject.ressources import EchoRessource
 from myproject.routes import api_route
  
  
 @api_route(path="/echo/{x}", request_method="GET", name="test", context=EchoRessource, renderer='json', api=sw.api(
+    tag="default",
     operation_id="echo_test",
     summary="echos the input",
     parameters=[

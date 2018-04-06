@@ -125,7 +125,10 @@ def add_simple_route(
     config.add_view(target, *args, **kwargs)
     request_method = kwargs.get("request_method", "GET")
     if request_method.upper() != "OPTIONS":
-        config.add_view(options_view, *args, **dict(kwargs, request_method="OPTIONS", permission=None))
+        options_kwargs = dict(dict(),**kwargs)
+        if "permission" in options_kwargs:
+            options_kwargs.pop('permission')
+        config.add_view(options_view, *args, **dict(options_kwargs, request_method="OPTIONS"))
     config.commit()
     config.route_prefix = orig_route_prefix
 
@@ -142,10 +145,7 @@ def create_api_namespace(namespace):
             """Constructor just here to accept parameters for decorator"""
             self.path = path
             view_name = kwargs.get("name", "")
-            if len(view_name.strip("/")) == 0:
-                raise Exception("You must provide a view_name to prevent route conflicts!")
-            self.route_path = self.path.rstrip("/") + "/" + view_name.lstrip("/") if view_name else self.path
-            #self.prefixed_route_path = "/" + namespace + "/" + self.path.rstrip("/").lstrip("/")
+            self.route_path = self.path.rstrip("/") + "/" + view_name.lstrip("/") if view_name else self.path.rstrip("/")
             self.prefixed_route_path = "/" + namespace + "/" + self.route_path.lstrip("/")
             self.args = args
             self.kwargs = kwargs
@@ -159,8 +159,11 @@ def create_api_namespace(namespace):
                 """Register a view; called on config.scan"""
                 config = scanner.config
 
-                # pylint: disable=W0142
-                add_simple_route(config, self.prefixed_route_path, wrapped, *args, route_kwargs=dict(traverse=self.prefixed_route_path), **kwargs)
+                if self.kwargs.get("context", None) is not None:
+                    # pylint: disable=W0142
+                    add_simple_route(config, self.prefixed_route_path, wrapped, *args, route_kwargs=dict(traverse=self.prefixed_route_path), **kwargs)
+                else:
+                    add_simple_route(config, self.prefixed_route_path, wrapped, *args, **kwargs)
 
                 request_method = kwargs.get("request_method", "GET")
                 registry = config.registry
